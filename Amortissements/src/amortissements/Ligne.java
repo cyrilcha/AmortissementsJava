@@ -1,104 +1,135 @@
 package amortissements;
 
 /**
- * Ligne du tableau d'amortissement d'un crédit.
+ * Ligne du tableau d'amortissement d'un crÃ©dit.
  */
 
 public class Ligne 
 {
+	private int annee;
+	private double capitalInitial;
+	private double interets;
+	private double amortissements;
+	private double annuite;
+	private double capitalFinal;
+	
 	/**
-	 * Créé une ligne à  partir des valeurs passées en paramètres.
+	 * CrÃ©Ã© une ligne Ã  partir des valeurs passÃ©es en paramÃ¨tres.
 	 */
 
 	Ligne(int annee, double capitalInitial, double interets, 
 			double amortissements, double annuite, double capitalFinal)
 	{
-		// TODO Ã  compléter.
+		this.annee = annee;
+		this.capitalInitial = capitalInitial;
+		this.interets = interets;
+		this.amortissements = amortissements;
+		this.annuite = annuite;
+		this.capitalFinal = capitalFinal;
+		
 	}
 
 	/**
-	 * Retourne l'indice de l'année concernée par la ligne.
-	 * Les indices commencent à 1.
+	 * Retourne l'indice de l'annÃ©e concernÃ©e par la ligne.
+	 * Les indices commencent Ã  1.
 	 */
 	
 	public int getAnnee()
 	{
-		// TODO à compléter.
-		return 0;
+		return annee;
 	}
 	
 	/**
-	 * Retourne le montant du capital restant dû au début 
-	 * de la période.
+	 * Retourne le montant du capital restant dÃ» au dÃ©but 
+	 * de la pÃ©riode.
 	 */
 	
 	public double getCapitalInitial()
 	{
-		// TODO à compléter.
-		return 0;
+		return capitalInitial;
 	}
 	
 	/**
-	 * Retourne le montant des intérêts verséss pendant la période.
+	 * Retourne le montant des intÃ©rÃªts versÃ©s pendant la pÃ©riode.
 	 */
 	
 	public double getInterets()
 	{
-		// TODO à compléter.
-		return 0;
+		return interets;
 	}
 
 	/**
-	 * Retourne le montant du capital amorti pendant la période.
+	 * Retourne le montant du capital amorti pendant la pÃ©riode.
 	 */
 	
 	public double getAmortissements()
 	{
-		// TODO Ã  complÃ©ter.
-		return 0;
+		return amortissements;
 	}
 
 	/**
-	 * Retourne le montant de l'annuité pendant la période.
+	 * Retourne le montant de l'annuitÃ© pendant la pÃ©riode.
 	 */
 	
 	public double getAnnuite()
 	{
-		// TODO à compléter.
-		return 0;
+		return annuite;
 	}
 	
 	/**
-	 * Retourne le montant du capital restant dû à la fin
-	 * de la période.
+	 * Retourne le montant du capital restant dÃ» Ã  la fin
+	 * de la pÃ©riode.
 	 */
 	
 	public double getCapitalFinal()
 	{
-		// TODO à compléter.
-		return 0;
+		return capitalFinal;
 	}
 	
 	/**
-	 * Retourne la première ligne du tableau d'amortissement pour
-	 * le crédit passé en paramètre.
+	 * Retourne la premiÃ¨re ligne du tableau d'amortissement pour
+	 * le crÃ©dit passÃ© en paramÃ¨tre.
 	 */
 	
 	public static Ligne premiereLigne(Credit credit)
 	{
-		// TODO à compléter.
-		return null;
+		int annee = 1;
+		double amortissements = credit.montantEmprunte() / credit.duree();
+		double capitalInitial = credit.montantEmprunte() - amortissements;
+		double capitalFinal = capitalInitial;
+		double annuite = credit.annuiteMaximale();
+		double interets = annuite - amortissements;
+		return new Ligne(annee, capitalInitial, interets, amortissements, annuite, 
+				capitalFinal);
 	}
 
 	/**
-	 * Retourne la ligne suivant la ligne courante pour le 
-	 * passer en paramètre. Retourne null si la ligne courante est
-	 * la dernière ligne.
+	 * Retourne la ligne suivant la ligne courante pour le crÃ©dit
+	 * passÃ© en paramÃ¨tre. Retourne null si la ligne courante est
+	 * la derniÃ¨re ligne.
 	 */
 	
 	public Ligne ligneSuivante(Credit credit)
 	{
-		// TODO à compléter.
-		return null;
+		if(this.annee == credit.duree())
+			return null;
+		else
+		{
+			int annee = this.annee + 1;
+			double amortissements = this.amortissements;
+			double capitalInitial = this.capitalInitial-amortissements;
+			double interets = this.capitalFinal*credit.taux();
+			double annuite = amortissements + interets;
+			double capitalFinal = this.capitalFinal - amortissements;
+			return new Ligne(annee, capitalInitial, interets, amortissements, annuite, 
+					capitalFinal);
+		}
+	}
+	
+	public String toString() 
+	{
+		return "\n  " + getAnnee() + "           "  + getAmortissements() + "        " +
+				getCapitalInitial() + "      " + getInterets() + "       " + 
+				getAnnuite() + "\n";
 	}
 }

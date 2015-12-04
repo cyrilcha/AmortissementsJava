@@ -15,8 +15,10 @@ public class Credit
 	private double taux;
 	private int duree;
 
+	private TableauAmortissement tableauamortissement;
+
 	/**
-	 * Cr�� un cr�dit.
+	 * Créé un crédit.
 	 */
 	
 	Credit (int typeCredit, double montantEmprunte, double annuiteMaximale,
@@ -27,6 +29,16 @@ public class Credit
 		this.annuiteMaximale = annuiteMaximale;
 		this.taux = taux;
 		this.duree = duree;
+		this.tableauamortissement = new TableauAmortissement(this);
+	}
+	
+	/**
+	 * Retourne le type de credit
+	 */
+	
+	public int typeCredit()
+	{
+		return typeCredit;
 	}
 	
 	/**
@@ -71,8 +83,7 @@ public class Credit
 	
 	public TableauAmortissement getTableauAmortissement()
 	{
-		// TODO  à  compléter.
-		return null;
+		return tableauamortissement;
 	}
 	
 	/**
@@ -83,8 +94,16 @@ public class Credit
 			double montantEmprunte, double annuiteMaximale,
 			int duree)
 	{
-		// TODO à compléter
-		return null;
+		if(typeCredit == AMORTISSEMENT_CONSTANTS)
+		{
+			double interet = annuiteMaximale - (montantEmprunte/duree);
+			double taux = interet / montantEmprunte;
+			return new Credit(typeCredit, montantEmprunte, annuiteMaximale, taux, duree);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**
@@ -95,8 +114,17 @@ public class Credit
 			double montantEmprunte, double annuiteMaximale,
 			double taux)
 	{
-		// TODO à compléter
-		return null;
+		if(typeCredit == AMORTISSEMENT_CONSTANTS)
+		{
+			
+			double duree_d = -taux + (montantEmprunte/annuiteMaximale);
+		    int duree = (int) Math.ceil(duree_d);
+			return new Credit(typeCredit, montantEmprunte, annuiteMaximale, taux, duree);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -109,7 +137,8 @@ public class Credit
 	{
 		if(typeCredit == AMORTISSEMENT_CONSTANTS)
 		{
-			return new Credit(typeCredit, annuiteMaximale,
+			double montantEmprunte = annuiteMaximale/((1./duree)+taux);
+			return new Credit(typeCredit, montantEmprunte,
 					annuiteMaximale, taux, duree);
 		}
 		else
@@ -128,13 +157,21 @@ public class Credit
 	{
 		if(typeCredit == AMORTISSEMENT_CONSTANTS)
 		{
-			return new Credit(typeCredit, montantEmprunte,
-					(montantEmprunte/duree + montantEmprunte*taux/100), taux, duree);
+			double annuiteMaximale = montantEmprunte/duree + montantEmprunte*taux;
+			return new Credit(typeCredit, montantEmprunte, annuiteMaximale, taux, duree);
 		}
 		else
 		{
 			return null;
 		}
+	}
+	
+	public String toString() 
+	{
+		return  "Montant emprunté: " + this.montantEmprunte() + "\n" + 
+				"Durée : " + this.duree() + "\n" +
+				"Taux : " + this.taux() + "\n" +
+				"Annuité Maximale : " + this.annuiteMaximale();
 	}
 }
 
